@@ -52,7 +52,7 @@ Créer une plateforme sécurisée, intelligente et scalable permettant :
 
 # 📊 Diagramme de Cas d’Utilisation
 
-![Use Case Diagram](docs/use-case.png)
+![Use Case Diagram](docs/use-case.png.jpeg)
 
 Acteurs principaux :
 - 👤 Utilisateur
