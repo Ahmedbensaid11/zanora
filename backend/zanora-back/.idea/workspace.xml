@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="237e7a80-a9f8-4964-8645-34d094a0a7b8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Admin-front/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/electron/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/electron/preload.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/eslint.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/postcss.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/public/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/public/vite.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/App.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/App.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/api/admin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/api/auth.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/api/permissionsApi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/api/roleService.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/assets/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/assets/react.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/assets/smartwaterlogo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/components/CenterLayout.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/components/CustomModal.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/components/ErrorAlert.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/components/Layout.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/components/OntarioMap.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/components/Sidebar.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/components/SuccessAlert.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/main.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/pages/Dashboard.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/pages/Login.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/pages/ManageRolesPage.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/pages/Register.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/pages/RolesPermissions.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/pages/UserManagement.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/styles/ManageRolesPage.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/styles/RolesPermissions.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/styles/UserManagement.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/styles/login.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/styles/register.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/src/tailwind.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Admin-front/vite.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Zanora-front" beforeDir="false" afterPath="$PROJECT_DIR$/../Zanora-front" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="39TvCreYOqIouZRveV61QrqjAr7" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.ZanoraBackApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration name="ZanoraBackApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="smartwater-back" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.pi.zanoraback.ZanoraBackApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="237e7a80-a9f8-4964-8645-34d094a0a7b8" name="Changes" comment="" />
+      <created>1770732756485</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1770732756485</updated>
+      <workItem from="1770732757839" duration="8950000" />
+      <workItem from="1771339543561" duration="1533000" />
+      <workItem from="1771344895844" duration="267000" />
+      <workItem from="1771345444647" duration="150000" />
+      <workItem from="1771345605827" duration="1997000" />
+      <workItem from="1771348477433" duration="9583000" />
+      <workItem from="1771679064359" duration="356000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
