@@ -1,0 +1,7 @@
+# Dependencies
+node_modules/
+frontend/Zanora-front/node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
