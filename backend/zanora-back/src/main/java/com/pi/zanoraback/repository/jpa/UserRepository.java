@@ -1,4 +1,4 @@
-package com.pi.zanoraback.repository;
+package com.pi.zanoraback.repository.jpa;
 
 import com.pi.zanoraback.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -47,10 +47,18 @@
       <change beforePath="$PROJECT_DIR$/../Admin-front/src/styles/register.css" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../Admin-front/src/tailwind.config.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../Admin-front/vite.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Zanora-front" beforeDir="false" afterPath="$PROJECT_DIR$/../Zanora-front" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/repository/PermissionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/repository/jpa/PermissionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/repository/RoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/repository/jpa/RoleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/repository/jpa/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/security/UserDetailsImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/security/UserDetailsImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/DataInitializerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/DataInitializerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/RolePermissionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/RolePermissionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/RoleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/RoleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -135,6 +143,8 @@
       <workItem from="1771345605827" duration="1997000" />
       <workItem from="1771348477433" duration="9583000" />
       <workItem from="1771679064359" duration="1730000" />
+      <workItem from="1771681990907" duration="9241000" />
+      <workItem from="1772543355148" duration="7253000" />
     </task>
     <servers />
   </component>

@@ -4,30 +4,25 @@ import com.pi.zanoraback.dto.UpdatePasswordDto;
 import com.pi.zanoraback.dto.UserDto;
 import com.pi.zanoraback.exception.EmailAlreadyExistsException;
 import com.pi.zanoraback.model.User;
-import com.pi.zanoraback.repository.UserRepository;
+import com.pi.zanoraback.repository.jpa.UserRepository;
 import com.pi.zanoraback.security.UserDetailsImpl;
 import com.pi.zanoraback.security.jwt.JwtService;
 import com.pi.zanoraback.service.UserService;
 import jakarta.validation.Valid;
 
 import jakarta.validation.ValidationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(
         origins = {"http://localhost:5173", "http://localhost:8081"},

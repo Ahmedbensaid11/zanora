@@ -8,9 +8,9 @@ import com.pi.zanoraback.exception.PermissionNotFoundException;
 import com.pi.zanoraback.exception.RoleNotFoundException;
 import com.pi.zanoraback.model.Permission;
 import com.pi.zanoraback.model.Role;
-import com.pi.zanoraback.repository.PermissionRepository;
-import com.pi.zanoraback.repository.RoleRepository;
-import com.pi.zanoraback.repository.UserRepository;
+import com.pi.zanoraback.repository.jpa.PermissionRepository;
+import com.pi.zanoraback.repository.jpa.RoleRepository;
+import com.pi.zanoraback.repository.jpa.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.pi.zanoraback.security;
 
 import com.pi.zanoraback.model.User;
-import com.pi.zanoraback.repository.UserRepository;
+import com.pi.zanoraback.repository.jpa.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.GrantedAuthority;

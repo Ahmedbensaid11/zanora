@@ -1,8 +1,8 @@
 package com.pi.zanoraback.controller;
 import com.pi.zanoraback.model.Role;
 import com.pi.zanoraback.model.User;
-import com.pi.zanoraback.repository.RoleRepository;
-import com.pi.zanoraback.repository.UserRepository;
+import com.pi.zanoraback.repository.jpa.RoleRepository;
+import com.pi.zanoraback.repository.jpa.UserRepository;
 import com.pi.zanoraback.security.UserDetailsImpl;
 import com.pi.zanoraback.security.jwt.JwtService;
 import org.springframework.http.HttpStatus;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @CrossOrigin(

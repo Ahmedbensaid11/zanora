@@ -59,7 +59,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/google/**").permitAll()
                         .requestMatchers("/api/users/**").permitAll()
                         .requestMatchers("/api/roles/**").permitAll()
-                        .requestMatchers("/api/forecast/**").permitAll()
+                        .requestMatchers("/api/reviews/**").permitAll()
                         .requestMatchers("/api/subcategory/**").permitAll()
                         .requestMatchers("/api/comments/**").permitAll()
                         .requestMatchers("/api/posts/**").permitAll()
