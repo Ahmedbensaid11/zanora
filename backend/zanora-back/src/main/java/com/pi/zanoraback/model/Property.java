@@ -20,6 +20,10 @@ public class Property {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+    @Column(nullable = false)
+    private Integer bedrooms;
+    @Column(nullable = false)
+    private Integer bathrooms;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -28,8 +32,9 @@ public class Property {
     @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false)
-    private String city;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id", nullable = false)
+    private City city;
 
     private Float area;
 
@@ -39,7 +44,8 @@ public class Property {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PropertyStatus status;
-
+    @Column(nullable = false)
+    private Float averageRating = 0.0f;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;

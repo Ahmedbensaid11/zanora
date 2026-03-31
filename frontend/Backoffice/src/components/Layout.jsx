@@ -11,6 +11,7 @@ export const Layout = ({ children, onOpenSettings }) => {
     '/permission': 'permission',
     '/roles':      'roles',
     '/settings':   'settings',
+    '/ml-health':  'ml-health',
   };
 
   const activeItem = routeToItem[location.pathname] || null;

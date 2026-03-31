@@ -2,6 +2,7 @@ package com.pi.zanoraback.dto;
 
 
 import com.pi.zanoraback.model.PropertyType;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,10 @@ public class CreatePropertyDTO {
     private String title;
 
     private String description;
+    @NotNull
+    private Integer bedrooms;
+    @NotNull
+    private Integer bathrooms;
 
     @NotNull
     private PropertyType type;
@@ -22,8 +27,9 @@ public class CreatePropertyDTO {
     @NotBlank
     private String address;
 
-    @NotBlank
-    private String city;
+    @NotNull
+    private Long cityId;
+    private Double rating;
 
     @Positive
     private Float area;
@@ -31,7 +37,6 @@ public class CreatePropertyDTO {
     @NotNull @Positive
     private Float pricePerMonth;
 
-    @NotEmpty
     private List<MultipartFile> images;
 
     @NotNull

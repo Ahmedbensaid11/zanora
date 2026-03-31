@@ -3,6 +3,7 @@ package com.pi.zanoraback.service;
 
 import com.pi.zanoraback.dto.CreatePropertyDTO;
 import com.pi.zanoraback.model.*;
+import com.pi.zanoraback.repository.jpa.CityRepository;
 import com.pi.zanoraback.repository.jpa.PropertyRepository;
 import com.pi.zanoraback.repository.jpa.RoleRepository;
 import com.pi.zanoraback.repository.jpa.UserRepository;
@@ -22,6 +23,7 @@ public class PropertyService {
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final CityRepository cityRepository;
     @Transactional
     public Property createProperty(CreatePropertyDTO dto, Long ownerId) throws IOException {
         User owner = userRepository.findById(ownerId)
@@ -43,14 +45,18 @@ public class PropertyService {
             owner.setRole(role);
 
         }
-
+        City city = cityRepository.findById(dto.getCityId())
+                .orElseThrow(()-> new RuntimeException("City not found"));
 
         Property property = Property.builder()
                 .title(dto.getTitle())
                 .description(dto.getDescription())
+                .bathrooms(dto.getBathrooms())
+                .bedrooms(dto.getBedrooms())
                 .type(dto.getType())
                 .address(dto.getAddress())
-                .city(dto.getCity())
+                .city(city)
+                .averageRating(0.0f)
                 .area(dto.getArea())
                 .pricePerMonth(dto.getPricePerMonth())
                 .status(PropertyStatus.AVAILABLE)
@@ -94,12 +100,15 @@ public class PropertyService {
         if (!property.getOwner().getId().equals(ownerId)) {
             throw new RuntimeException("Unauthorized: You do not own this property");
         }
-
+        City city = cityRepository.findById(dto.getCityId())
+                .orElseThrow(()-> new RuntimeException("City not found"));
         property.setTitle(dto.getTitle());
         property.setDescription(dto.getDescription());
+        property.setBathrooms(dto.getBathrooms());
+        property.setBedrooms(dto.getBedrooms());
         property.setType(dto.getType());
         property.setAddress(dto.getAddress());
-        property.setCity(dto.getCity());
+        property.setCity(city);
         property.setArea(dto.getArea());
         property.setPricePerMonth(dto.getPricePerMonth());
 

@@ -4,6 +4,7 @@ package com.pi.zanoraback.controller;
 import com.pi.zanoraback.dto.CreatePropertyDTO;
 import com.pi.zanoraback.model.Property;
 import com.pi.zanoraback.service.PropertyService;
+import com.pi.zanoraback.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,18 +23,20 @@ import java.io.IOException;
 public class PropertyController {
 
     private final PropertyService propertyService;
+    private final UserService userService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Property> createProperty(
-            @Valid @ModelAttribute CreatePropertyDTO dto,
-            @RequestParam Long ownerId) throws IOException {
+            @Valid @ModelAttribute CreatePropertyDTO dto) throws IOException {
+        Long ownerId = userService.getCurrentlyAuthenticatedUser().getId();
         Property created = propertyService.createProperty(dto, ownerId);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
     @DeleteMapping("/{propertyId}")
     public ResponseEntity<Void> deleteProperty(
-            @PathVariable Long propertyId,
-            @RequestParam Long ownerId) {
+            @PathVariable Long propertyId
+            ) {
+        Long ownerId = userService.getCurrentlyAuthenticatedUser().getId();
         propertyService.deleteProperty(propertyId, ownerId);
         return ResponseEntity.noContent().build();
     }
@@ -41,8 +44,8 @@ public class PropertyController {
     @PutMapping(value = "/{propertyId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Property> updateProperty(
             @PathVariable Long propertyId,
-            @RequestParam Long ownerId,
             @Valid @ModelAttribute CreatePropertyDTO dto) throws IOException {
+        Long ownerId = userService.getCurrentlyAuthenticatedUser().getId();
         Property updated = propertyService.updateProperty(propertyId, ownerId, dto);
         return ResponseEntity.ok(updated);
     }

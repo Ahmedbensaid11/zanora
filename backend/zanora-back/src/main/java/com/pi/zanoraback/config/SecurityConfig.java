@@ -60,7 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/**").permitAll()
                         .requestMatchers("/api/roles/**").permitAll()
                         .requestMatchers("/api/reviews/**").permitAll()
-                        .requestMatchers("/api/subcategory/**").permitAll()
+                        .requestMatchers("/api/properties/**").permitAll()
                         .requestMatchers("/api/comments/**").permitAll()
                         .requestMatchers("/api/posts/**").permitAll()
                         .requestMatchers("/api/subcategories/**").permitAll()
