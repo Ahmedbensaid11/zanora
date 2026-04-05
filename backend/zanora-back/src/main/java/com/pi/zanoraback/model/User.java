@@ -40,9 +40,8 @@ public class User implements Serializable {
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(name = "profile_img")
+
+    @Column(columnDefinition = "bytea")
     private byte[] profileImg;
 
     @PrePersist
