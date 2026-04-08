@@ -1,7 +1,7 @@
 import React from 'react';
 import { LogOut } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faUserShield, faKey } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faUserShield, faKey, faBrain} from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
 export const Sidebar = ({ activeItem, onNavigate }) => {
@@ -16,6 +16,7 @@ export const Sidebar = ({ activeItem, onNavigate }) => {
           { id: 'roles',      label: 'Roles & Permissions',  icon: faUserShield, color: '#E879F9' },
           { id: 'permission', label: 'Permissions',          icon: faKey,        color: '#60A5FA' },
           { id: 'settings',   label: 'Settings',             icon: faKey,        color: '#60A5FA' },
+          { id: 'ml-health',  label: 'AI Health',           icon: faBrain,      color: '#22d3a5' },
         ]
       : []),
   ];

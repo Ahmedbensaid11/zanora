@@ -39,9 +39,6 @@ public class UserDto {
     @Getter
     @Setter
     private String firstName;
-    @Getter
-    @Setter
-    private boolean hasPassword;
 
     @Getter
     @Setter

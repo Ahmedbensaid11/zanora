@@ -8,8 +8,10 @@ import RolesPermissions from './pages/RolesPermissions';
 import ManageRolesPage from './pages/ManageRolesPage';
 
 import UserManagement from './pages/UserManagement';
+import MLHealthPage from './pages/MLHealthPage';
 import SettingsPage, { useInitSettings } from './pages/Settingspage '; 
 import { Layout } from './components/Layout';
+
 function App() {
   
   return (
@@ -22,7 +24,7 @@ function App() {
         <Route path="/roles" element={<Layout><ManageRolesPage /></Layout>} />
         <Route path="/users" element={<Layout><UserManagement /></Layout>} />
         <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
-
+        <Route path="/ml-health" element={<Layout><MLHealthPage /></Layout>} />
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>

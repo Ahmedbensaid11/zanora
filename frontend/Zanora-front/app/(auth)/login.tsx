@@ -73,13 +73,11 @@ export default function LoginScreen() {
       setGoogleLoading(true);
       setError('');
 
-      // Get access token from the response
       const accessToken = authResponse.authentication?.accessToken
         ?? authResponse.params?.access_token;
 
       if (!accessToken) throw new Error('No access token received from Google');
 
-      // Use access token to fetch user info directly from Google
       const userInfoRes = await fetch('https://www.googleapis.com/userinfo/v2/me', {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
@@ -90,7 +88,6 @@ export default function LoginScreen() {
 
       if (!userInfo.email) throw new Error('No email returned from Google');
 
-      // Send user info to your Spring Boot backend
       const data = await loginWithGoogleUserInfo(userInfo);
       await AsyncStorage.setItem('token', data.token);
       router.replace('/(tabs)');

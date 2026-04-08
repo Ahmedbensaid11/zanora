@@ -33,7 +33,7 @@ export const Login = () => {
       const user = await authAPI.getCurrentUser(response.token)
       localStorage.setItem('currentUser', JSON.stringify(user));
       
-      console.log("=============================",localStorage.getItem('currentUser'))
+      console.log("=============================",localStorage.getItem('token'))
       navigate('/users');
     } catch (err) {
       setError(err.message);

@@ -2,7 +2,7 @@ package com.pi.zanoraback.service;
 
 import com.pi.zanoraback.dto.RoleDto;
 import com.pi.zanoraback.model.Role;
-import com.pi.zanoraback.repository.RoleRepository;
+import com.pi.zanoraback.repository.jpa.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;

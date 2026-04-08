@@ -25,6 +25,15 @@ export default function TabsLayout() {
           ),
         }}
       />
+            <Tabs.Screen
+        name="properties"
+        options={{
+          title: 'Properties',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="business" size={size} color={color} />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="profile"
         options={{

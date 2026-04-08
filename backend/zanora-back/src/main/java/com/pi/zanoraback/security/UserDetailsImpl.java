@@ -1,7 +1,7 @@
 package com.pi.zanoraback.security;
 
 import com.pi.zanoraback.model.User;
-import com.pi.zanoraback.repository.UserRepository;
+import com.pi.zanoraback.repository.jpa.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -22,7 +22,7 @@ public class UserDetailsImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
