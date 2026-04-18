@@ -1,6 +1,6 @@
 
-const BASE_URL = 'http://localhost:8080/api/auth';
-const BASE_URL2 = 'http://localhost:8080/api';
+const BASE_URL = 'http://192.168.0.109:8080/api/auth';
+const BASE_URL2 = 'http://192.168.0.109:8080/api';
 
 
 export interface AuthTokenResponse {

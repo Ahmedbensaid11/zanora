@@ -24,7 +24,7 @@ public class Offer {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private OfferType type; // BUY or RENT
+    private OfferType type;
 
     @Column(nullable = false)
     private Float proposedPrice;

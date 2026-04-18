@@ -3,10 +3,7 @@ package com.pi.zanoraback.service;
 
 import com.pi.zanoraback.dto.CreatePropertyDTO;
 import com.pi.zanoraback.model.*;
-import com.pi.zanoraback.repository.jpa.CityRepository;
-import com.pi.zanoraback.repository.jpa.PropertyRepository;
-import com.pi.zanoraback.repository.jpa.RoleRepository;
-import com.pi.zanoraback.repository.jpa.UserRepository;
+import com.pi.zanoraback.repository.jpa.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +18,7 @@ import java.util.List;
 public class PropertyService {
 
     private final PropertyRepository propertyRepository;
+    private final OfferRepository offerRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final CityRepository cityRepository;
@@ -88,6 +86,13 @@ public class PropertyService {
         if (!property.getOwner().getId().equals(ownerId)) {
             throw new RuntimeException("Unauthorized: You do not own this property");
         }
+
+        // Clear child collections before deleting
+        property.getImages().clear();
+        List<Offer> offers = offerRepository.findByPropertyId(propertyId);
+        offerRepository.deleteAll(offers);
+        propertyRepository.save(property); // flush the orphan removal
+
 
         propertyRepository.delete(property);
     }

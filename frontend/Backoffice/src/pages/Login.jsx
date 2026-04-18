@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { CenterLayout } from '../components/CenterLayout';
 import { authAPI } from '../api/auth';
 import '../styles/login.css';
-
+import logo from "../assets/logo.png";
 export const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -47,7 +47,7 @@ export const Login = () => {
       <div className="auth-container">
         <div className="logo-container">
           <img 
-            src="/src/assets/logo.png" 
+            src={logo} 
             alt="SmartWater Logo" 
             className="logo-image"
           />

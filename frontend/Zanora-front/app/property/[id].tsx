@@ -1,4 +1,5 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -29,10 +30,10 @@ import {
   updateReview,
 } from '../../services/Propertydetailservice';
 import { isOwner as checkIsOwner, PropertyResponseDTO } from '../../services/Propertyservice';
-import { getSelectedProperty } from '../stores/propertyStore';
+import { getSelectedProperty } from '../../stores/propertyStore';
 
-// ── Components ────────────────────────────────────────────────────────────────
 import DeleteConfirmModal from '../../components/Deleteconfirmmodal';
+import EditPropertyModal, { EditPropertyFormData } from '../../components/Editpropertymodal';
 import ImageGallery, { GalleryImage } from '../../components/Imagegallery';
 import OfferModal from '../../components/Offermodal';
 import ReviewCard from '../../components/Reviewcard';
@@ -40,7 +41,6 @@ import ReviewModal from '../../components/Reviewmodal';
 
 const { width: SCREEN_W } = Dimensions.get('window');
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 const padDate = (dateStr: string): string => {
   const [y, m, d] = dateStr.split('-');
   return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
@@ -53,10 +53,55 @@ const STATUS_COLORS: Record<string, string> = {
   INACTIVE: '#95A5A6',
 };
 
+// ─── API calls ────────────────────────────────────────────────────────────────
+
+async function updatePropertyAPI(
+  propertyId: number,
+  data: EditPropertyFormData,
+  cityId: number
+): Promise<void> {
+  const token = await AsyncStorage.getItem('token');
+  const formData = new FormData();
+  formData.append('title', data.title);
+  formData.append('description', data.description);
+  formData.append('bedrooms', data.bedrooms);
+  formData.append('bathrooms', data.bathrooms);
+  formData.append('type', data.type);
+  formData.append('address', data.address);
+  formData.append('area', data.area);
+  formData.append('pricePerMonth', data.pricePerMonth);
+  formData.append('status', data.status);
+  formData.append('cityId', String(cityId));
+  formData.append('primaryImageIndex', '0');
+
+  const res = await fetch(`http://localhost:8080/api/properties/${propertyId}`, {
+    method: 'PUT',
+    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: formData,
+  });
+  if (!res.ok) {
+    const err = await res.text().catch(() => res.statusText);
+    throw new Error(err || `Update failed: ${res.status}`);
+  }
+}
+
+async function deletePropertyAPI(propertyId: number): Promise<void> {
+  console.log('deletePropertyAPI called with ID:', propertyId);
+  const token = await AsyncStorage.getItem('token');
+  const res = await fetch(`http://localhost:8080/api/properties/${propertyId}`, {
+    method: 'DELETE',
+    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+  });
+  if (!res.ok) {
+    const err = await res.text().catch(() => res.statusText);
+    throw new Error(err || `Delete failed: ${res.status}`);
+  }
+}
+
 // ─── Screen ───────────────────────────────────────────────────────────────────
+
 export default function PropertyDetailScreen() {
   const router = useRouter();
-  const params = useLocalSearchParams<{ property: string }>();
 
   const property: PropertyResponseDTO | null = (() => {
     try {
@@ -67,34 +112,34 @@ export default function PropertyDetailScreen() {
     }
   })();
 
-  // ── Server-authoritative flags ─────────────────────────────────────────────
   const [isOwner, setIsOwner] = useState(false);
   const [userHasReviewed, setUserHasReviewed] = useState(false);
   const [permissionsLoading, setPermissionsLoading] = useState(true);
 
-  // ── Reviews state ──────────────────────────────────────────────────────────
+  // Local copy so we can reflect edits without a full reload
+  const [localProperty, setLocalProperty] = useState<PropertyResponseDTO | null>(property);
+
   const [ownReviews, setOwnReviews] = useState<Set<string>>(new Set());
   const [reviews, setReviews] = useState<ReviewResponse[]>([]);
-  const [avgRating, setAvgRating] = useState<number>((property as any)?.averageRating ?? 0);
+  const [avgRating, setAvgRating] = useState<number>(
+    (property as any)?.averageRating ?? 0
+  );
   const [reviewsLoading, setReviewsLoading] = useState(false);
   const [reviewSort, setReviewSort] = useState<{
     by: 'createdAt' | 'rating';
     dir: 'asc' | 'desc';
   }>({ by: 'createdAt', dir: 'desc' });
 
-  // ── Review modal state ─────────────────────────────────────────────────────
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const [editingReview, setEditingReview] = useState<ReviewResponse | null>(null);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
 
-  // ── Delete confirm modal state ─────────────────────────────────────────────
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [deletingReviewId, setDeletingReviewId] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  // ── Offer modal state ──────────────────────────────────────────────────────
   const [offerModalVisible, setOfferModalVisible] = useState(false);
   const [offerType, setOfferType] = useState<OfferType>(OfferType.RENT);
   const [offerPrice, setOfferPrice] = useState('');
@@ -103,7 +148,9 @@ export default function PropertyDetailScreen() {
   const [rentEnd, setRentEnd] = useState('');
   const [offerSubmitting, setOfferSubmitting] = useState(false);
 
-  // ── Animation ──────────────────────────────────────────────────────────────
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editSubmitting, setEditSubmitting] = useState(false);
+
   const contentAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -120,7 +167,6 @@ export default function PropertyDetailScreen() {
     if (property?.id) loadReviews();
   }, [reviewSort]);
 
-  // ── Data loaders ───────────────────────────────────────────────────────────
   const loadAll = useCallback(async () => {
     if (!property?.id) return;
     setPermissionsLoading(true);
@@ -149,8 +195,9 @@ export default function PropertyDetailScreen() {
       ]);
       setReviews(r);
       const authorChecks = await Promise.all(r.map((rev) => isReviewAuthor(rev.id)));
-      const ownSet = new Set(r.filter((_, i) => authorChecks[i]).map((rev) => rev.id));
-      setOwnReviews(ownSet);
+      setOwnReviews(
+        new Set(r.filter((_, i) => authorChecks[i]).map((rev) => rev.id))
+      );
       setAvgRating(avg ?? 0);
     } catch (e) {
       console.error('loadReviews error:', e);
@@ -166,7 +213,6 @@ export default function PropertyDetailScreen() {
     setReviewComment('');
     setReviewModalVisible(true);
   };
-
   const openEditReview = (r: ReviewResponse) => {
     setEditingReview(r);
     setReviewRating(r.rating);
@@ -205,12 +251,10 @@ export default function PropertyDetailScreen() {
     }
   };
 
-  // Tap delete → open confirmation modal (no Alert)
   const handleDeleteReview = (id: string) => {
     setDeletingReviewId(id);
     setDeleteModalVisible(true);
   };
-
   const confirmDeleteReview = async () => {
     if (!deletingReviewId) return;
     setDeleteLoading(true);
@@ -226,7 +270,6 @@ export default function PropertyDetailScreen() {
       setDeleteLoading(false);
     }
   };
-
   const cancelDeleteReview = () => {
     setDeleteModalVisible(false);
     setDeletingReviewId(null);
@@ -275,8 +318,73 @@ export default function PropertyDetailScreen() {
     setRentEnd('');
   };
 
-  // ── Early exit ─────────────────────────────────────────────────────────────
-  if (!property) {
+  // ── Edit property handler ──────────────────────────────────────────────────
+  const handleEditSubmit = async (data: EditPropertyFormData) => {
+    if (!localProperty?.id) return;
+
+    // cityId is now a direct field on PropertyResponseDTO
+    const cityId = localProperty.cityId;
+
+    if (!cityId) {
+      Alert.alert('Error', 'City information is missing. Cannot update property.');
+      return;
+    }
+
+    setEditSubmitting(true);
+    try {
+      await updatePropertyAPI(localProperty.id, data, cityId);
+      // Optimistically update the local view
+      setLocalProperty((prev) =>
+        prev
+          ? {
+              ...prev,
+              title: data.title,
+              description: data.description,
+              bedrooms: parseInt(data.bedrooms),
+              bathrooms: parseInt(data.bathrooms),
+              type: data.type as any,
+              address: data.address,
+              area: parseFloat(data.area),
+              pricePerMonth: parseFloat(data.pricePerMonth),
+              status: data.status as any,
+            }
+          : prev
+      );
+      setEditModalVisible(false);
+      Alert.alert('Success', 'Property updated successfully!');
+    } catch (e: any) {
+      Alert.alert('Error', e.message ?? 'Failed to update property');
+    } finally {
+      setEditSubmitting(false);
+    }
+  };
+
+  // ── Delete property handler ────────────────────────────────────────────────
+  const handleDeleteProperty = async () => {
+    if (!localProperty?.id) return;
+    try {
+      console.log('Attempting to delete property with ID:', localProperty.id);
+      await deletePropertyAPI(localProperty.id);
+      setEditModalVisible(false);
+      router.back();
+    } catch (e: any) {
+      Alert.alert('Error', e.message ?? 'Failed to delete property');
+    }
+  };
+
+  const buildEditInitialData = (): EditPropertyFormData => ({
+    title: localProperty?.title ?? '',
+    description: localProperty?.description ?? '',
+    bedrooms: String(localProperty?.bedrooms ?? ''),
+    bathrooms: String(localProperty?.bathrooms ?? ''),
+    type: (localProperty?.type as any) ?? 'APARTMENT',
+    address: localProperty?.address ?? '',
+    area: String(localProperty?.area ?? ''),
+    pricePerMonth: String(localProperty?.pricePerMonth ?? ''),
+    status: (localProperty?.status as any) ?? 'AVAILABLE',
+  });
+
+  if (!localProperty) {
     return (
       <View style={s.errorScreen}>
         <MaterialCommunityIcons name="home-alert-outline" size={56} color="#CCC" />
@@ -288,29 +396,39 @@ export default function PropertyDetailScreen() {
     );
   }
 
-  // ── Gallery images ─────────────────────────────────────────────────────────
   const galleryImages: GalleryImage[] = (() => {
-    const raw = property as any;
-    if (raw?.images && Array.isArray(raw.images) && raw.images.length > 0) {
-      return [...raw.images]
-        .sort((a: any, b: any) => (b.isPrimary ? 1 : -1))
-        .filter((img: any) => img.data)
-        .map((img: any) => ({
-          uri: `data:${img.contentType ?? 'image/jpeg'};base64,${img.data}`,
-          isPrimary: img.isPrimary,
-        }));
-    }
-    if (raw?.imageUrls && Array.isArray(raw.imageUrls)) {
-      return raw.imageUrls.map((url: string) => ({ uri: url }));
+    // PropertyResponseDTO uses imageUrls (list of URL strings)
+    if (
+      localProperty.imageUrls &&
+      Array.isArray(localProperty.imageUrls) &&
+      localProperty.imageUrls.length > 0
+    ) {
+      return localProperty.imageUrls.map((url: string) => ({ uri: url }));
     }
     return [];
   })();
 
-  const statusColor = STATUS_COLORS[property.status] ?? '#95A5A6';
-  const canReview = !isOwner && !userHasReviewed && property.status === 'AVAILABLE';
-  const canOffer = !isOwner && property.status === 'AVAILABLE';
+  const statusColor = STATUS_COLORS[localProperty.status] ?? '#95A5A6';
+  const canReview =
+    !isOwner && !userHasReviewed && localProperty.status === 'AVAILABLE';
+  const canOffer = !isOwner && localProperty.status === 'AVAILABLE';
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // Build propertyMeta for OfferModal price prediction
+  // status maps to French strings the prediction API expects
+  const offerStatusLabel =
+    localProperty.status === 'AVAILABLE' || localProperty.status === 'PENDING'
+      ? offerType === OfferType.RENT
+        ? 'À louer'
+        : 'À vendre'
+      : 'À louer';
+
+  const TYPE_TO_API: Record<string, string> = {
+    APARTMENT: 'Appartement',
+    HOUSE: 'Villa',
+    STUDIO: 'Studio',
+    OFFICE: 'Bureau',
+  };
+
   return (
     <View style={s.screen}>
       <StatusBar barStyle="light-content" />
@@ -329,10 +447,8 @@ export default function PropertyDetailScreen() {
           </TouchableOpacity>
 
           <View style={[s.statusPill, { backgroundColor: statusColor }]}>
-            <Text style={s.statusPillText}>{property.status}</Text>
+            <Text style={s.statusPillText}>{localProperty.status}</Text>
           </View>
-
-          
         </View>
 
         {/* Content */}
@@ -355,30 +471,58 @@ export default function PropertyDetailScreen() {
           {/* Title row */}
           <View style={s.titleRow}>
             <View style={{ flex: 1 }}>
-              <Text style={s.propertyTitle}>{property.title}</Text>
+              <Text style={s.propertyTitle}>{localProperty.title}</Text>
               <Text style={s.propertyAddress}>
                 <MaterialCommunityIcons
                   name="map-marker-outline"
                   size={13}
                   color={Colors.textSecondary}
                 />{' '}
-                {property.address}
-                {(property as any).cityName ? `, ${(property as any).cityName}` : ''}
+                {localProperty.address}
+                {localProperty.cityName ? `, ${localProperty.cityName}` : ''}
               </Text>
             </View>
-            <View style={s.typeBadge}>
-              <Text style={s.typeText}>{property.type}</Text>
+            <View style={s.titleRight}>
+              <View style={s.typeBadge}>
+                <Text style={s.typeText}>{localProperty.type}</Text>
+              </View>
+              {!permissionsLoading && isOwner && (
+  <>
+                  <TouchableOpacity
+                    style={s.editIconBtn}
+                    onPress={() => setEditModalVisible(true)}
+                    hitSlop={10}
+                  >
+                    <MaterialCommunityIcons
+                      name="pencil-outline"
+                      size={16}
+                      color={Colors.primary}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={s.deleteIconBtn}
+                    onPress={handleDeleteProperty}
+                    hitSlop={10}
+                  >
+                    <MaterialCommunityIcons
+                      name="trash-can-outline"
+                      size={16}
+                      color="#E74C3C"
+                    />
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
           </View>
 
           {/* Stats */}
           <View style={s.statsRow}>
             {[
-              { icon: 'bed-outline', value: property.bedrooms, label: 'Beds' },
-              { icon: 'shower', value: property.bathrooms, label: 'Baths' },
+              { icon: 'bed-outline', value: localProperty.bedrooms, label: 'Beds' },
+              { icon: 'shower', value: localProperty.bathrooms, label: 'Baths' },
               {
                 icon: 'ruler-square',
-                value: property.area ? `${property.area}m²` : '—',
+                value: localProperty.area ? `${localProperty.area}m²` : '—',
                 label: 'Area',
               },
               {
@@ -401,22 +545,23 @@ export default function PropertyDetailScreen() {
           </View>
 
           {/* Description */}
-          {property.description ? (
+          {localProperty.description ? (
             <View style={s.section}>
               <Text style={s.sectionTitle}>About this property</Text>
               <Text style={s.heroPrice}>
-              {property.pricePerMonth?.toLocaleString()} TND
-              <Text style={s.heroPerMonth}> / month</Text>
-            </Text>
-              <Text style={s.description}>{property.description}</Text>
+                {localProperty.pricePerMonth?.toLocaleString()} TND
+                <Text style={s.heroPerMonth}> / month</Text>
+              </Text>
+              <Text style={s.description}>{localProperty.description}</Text>
             </View>
           ) : null}
 
-          {/* Action buttons */}
+          {/* Action buttons for non-owners */}
           {permissionsLoading ? (
             <ActivityIndicator color={Colors.primary} style={{ marginBottom: 24 }} />
           ) : (
-            (canOffer || canReview || (!isOwner && userHasReviewed)) && (
+            !isOwner &&
+            (canOffer || canReview || userHasReviewed) && (
               <View style={s.actionsRow}>
                 {canOffer && (
                   <TouchableOpacity
@@ -424,11 +569,14 @@ export default function PropertyDetailScreen() {
                     onPress={() => setOfferModalVisible(true)}
                     activeOpacity={0.85}
                   >
-                    <MaterialCommunityIcons name="handshake-outline" size={20} color="#fff" />
+                    <MaterialCommunityIcons
+                      name="handshake-outline"
+                      size={20}
+                      color="#fff"
+                    />
                     <Text style={s.actionBtnText}>Make an Offer</Text>
                   </TouchableOpacity>
                 )}
-
                 {canReview && (
                   <TouchableOpacity
                     style={[s.actionBtn, s.reviewBtn]}
@@ -445,10 +593,13 @@ export default function PropertyDetailScreen() {
                     </Text>
                   </TouchableOpacity>
                 )}
-
                 {!isOwner && userHasReviewed && (
                   <View style={s.alreadyReviewed}>
-                    <MaterialCommunityIcons name="check-circle-outline" size={16} color="#27AE60" />
+                    <MaterialCommunityIcons
+                      name="check-circle-outline"
+                      size={16}
+                      color="#27AE60"
+                    />
                     <Text style={s.alreadyReviewedText}>
                       You've reviewed this property
                     </Text>
@@ -468,7 +619,10 @@ export default function PropertyDetailScreen() {
                 {(['createdAt', 'rating'] as const).map((field) => (
                   <TouchableOpacity
                     key={field}
-                    style={[s.sortChip, reviewSort.by === field && s.sortChipActive]}
+                    style={[
+                      s.sortChip,
+                      reviewSort.by === field && s.sortChipActive,
+                    ]}
                     onPress={() => setReviewSort((p) => ({ ...p, by: field }))}
                   >
                     <Text
@@ -491,7 +645,9 @@ export default function PropertyDetailScreen() {
                   }
                 >
                   <MaterialCommunityIcons
-                    name={reviewSort.dir === 'desc' ? 'sort-descending' : 'sort-ascending'}
+                    name={
+                      reviewSort.dir === 'desc' ? 'sort-descending' : 'sort-ascending'
+                    }
                     size={18}
                     color={Colors.primary}
                   />
@@ -500,7 +656,10 @@ export default function PropertyDetailScreen() {
             </View>
 
             {reviewsLoading ? (
-              <ActivityIndicator color={Colors.primary} style={{ marginVertical: 20 }} />
+              <ActivityIndicator
+                color={Colors.primary}
+                style={{ marginVertical: 20 }}
+              />
             ) : reviews.length === 0 ? (
               <View style={s.emptyReviews}>
                 <MaterialCommunityIcons name="comment-outline" size={40} color="#CCC" />
@@ -524,7 +683,7 @@ export default function PropertyDetailScreen() {
         </Animated.View>
       </ScrollView>
 
-      {/* ── Modals ── */}
+      {/* ── Modals ──────────────────────────────────────────────────────────── */}
       <ReviewModal
         visible={reviewModalVisible}
         onClose={() => setReviewModalVisible(false)}
@@ -555,7 +714,16 @@ export default function PropertyDetailScreen() {
         rentEnd={rentEnd}
         onRentEndChange={setRentEnd}
         submitting={offerSubmitting}
-        propertyPrice={property.pricePerMonth}
+        propertyPrice={localProperty.pricePerMonth}
+        propertyMeta={{
+          status: offerStatusLabel,
+          propertyType: TYPE_TO_API[localProperty.type as string] ?? 'Appartement',
+          city: localProperty.cityName ?? 'Tunis',
+          state: localProperty.stateName ?? localProperty.cityName ?? 'Tunis',
+          bedrooms: localProperty.bedrooms ?? 1,
+          bathrooms: localProperty.bathrooms ?? 1,
+          sizeM2: localProperty.area ?? 0,
+        }}
       />
 
       <DeleteConfirmModal
@@ -564,13 +732,32 @@ export default function PropertyDetailScreen() {
         onConfirm={confirmDeleteReview}
         loading={deleteLoading}
       />
+
+      <EditPropertyModal
+        visible={editModalVisible}
+        onClose={() => setEditModalVisible(false)}
+        onSubmit={handleEditSubmit}
+        onDelete={handleDeleteProperty}
+        initialData={buildEditInitialData()}
+        cityName={localProperty.cityName}
+        submitting={editSubmitting}
+      />
     </View>
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: Colors.background },
+  deleteIconBtn: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#E74C3C15',
+    borderWidth: 1.5,
+    borderColor: '#E74C3C35',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   errorScreen: {
     flex: 1,
     alignItems: 'center',
@@ -609,19 +796,6 @@ const s = StyleSheet.create({
     zIndex: 10,
   },
   statusPillText: { color: '#fff', fontSize: 11, fontWeight: '700', letterSpacing: 0.8 },
-  heroOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-    paddingTop: 40,
-    backgroundColor: 'rgba(0,0,0,0.32)',
-    zIndex: 5,
-  },
-  heroPrice: { fontSize: 26, fontWeight: '800', color: '#FFFFFF' },
-  heroPerMonth: { fontSize: 14, fontWeight: '400', color: 'rgba(255,255,255,0.8)' },
   content: { padding: 20 },
   titleRow: {
     flexDirection: 'row',
@@ -631,14 +805,24 @@ const s = StyleSheet.create({
   },
   propertyTitle: { fontSize: 22, fontWeight: '800', color: Colors.text, lineHeight: 26 },
   propertyAddress: { fontSize: 13, color: Colors.textSecondary, marginTop: 4 },
+  titleRight: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 2 },
   typeBadge: {
     backgroundColor: `${Colors.primary}18`,
     borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    marginTop: 2,
   },
   typeText: { color: Colors.primary, fontSize: 11, fontWeight: '700', letterSpacing: 0.5 },
+  editIconBtn: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: `${Colors.primary}15`,
+    borderWidth: 1.5,
+    borderColor: `${Colors.primary}35`,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   statsRow: {
     flexDirection: 'row',
     backgroundColor: Colors.white,
@@ -664,6 +848,8 @@ const s = StyleSheet.create({
     gap: 8,
   },
   sectionTitle: { fontSize: 18, fontWeight: '800', color: Colors.text },
+  heroPrice: { fontSize: 26, fontWeight: '800', color: Colors.text, marginBottom: 8 },
+  heroPerMonth: { fontSize: 14, fontWeight: '400', color: Colors.textSecondary },
   description: { fontSize: 14, color: Colors.textSecondary, lineHeight: 22 },
   actionsRow: {
     flexDirection: 'row',

@@ -1,24 +1,24 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import {
-  Animated,
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    Animated,
+    Dimensions,
+    Image,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import { Colors } from '../constants/Colors';
 import {
-  PropertyStatusColors,
-  PropertyStatusLabels,
-  PropertyTypeLabels,
+    PropertyStatusColors,
+    PropertyStatusLabels,
+    PropertyTypeLabels,
 } from '../constants/Propertyenums ';
 import {
-  PropertyResponseDTO,
+    PropertyResponseDTO,
 } from '../services/Propertyservice';
-import { setSelectedProperty } from '../app/stores/propertyStore';
+import { setSelectedProperty } from '../stores/propertyStore';
 interface Props {
   property: PropertyResponseDTO;
   index: number;

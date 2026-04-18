@@ -23,6 +23,7 @@ public class OfferService {
     private final OfferRepository offerRepository;
     private final PropertyRepository propertyRepository;
     private final UserService userService;
+    private final NotificationService notificationService; // ← NEW
 
     public OfferResponseDTO createOffer(OfferRequestDTO dto) {
         User buyer = userService.getCurrentlyAuthenticatedUser();
@@ -30,24 +31,20 @@ public class OfferService {
         Property property = propertyRepository.findById(dto.getPropertyId())
                 .orElseThrow(() -> new RuntimeException("Property not found with id: " + dto.getPropertyId()));
 
-        // Owner cannot make an offer on their own property
         if (property.getOwner().getId().equals(buyer.getId())) {
             throw new OfferUnauthorizedException("You cannot make an offer on your own property");
         }
 
-        // Property must be available
         if (property.getStatus() != PropertyStatus.AVAILABLE) {
             throw new PropertyNotAvailableException("Property is not available for offers");
         }
 
-        // No duplicate pending offer
         offerRepository.findByPropertyIdAndBuyerIdAndStatus(
                 dto.getPropertyId(), buyer.getId(), OfferStatus.PENDING
         ).ifPresent(o -> {
             throw new DuplicateOfferException("You already have a pending offer on this property");
         });
 
-        // Rent dates required when type = RENT
         if (dto.getType() == OfferType.RENT) {
             if (dto.getRentStartDate() == null || dto.getRentEndDate() == null) {
                 throw new InvalidOfferException("Rent start and end dates are required for RENT offers");
@@ -68,7 +65,12 @@ public class OfferService {
                 .status(OfferStatus.PENDING)
                 .build();
 
-        return mapToResponseDTO(offerRepository.save(offer));
+        Offer saved = offerRepository.save(offer);
+
+        // ── Notify the property owner ────────────────────────────────────────
+        notificationService.notifyOwnerOfNewOffer(saved);
+
+        return mapToResponseDTO(saved);
     }
 
     public OfferResponseDTO respondToOffer(Long offerId, OfferRespondDTO dto) {
@@ -77,17 +79,14 @@ public class OfferService {
         Offer offer = offerRepository.findById(offerId)
                 .orElseThrow(() -> new OfferNotFoundException("Offer not found with id: " + offerId));
 
-        // Only the property owner can respond
         if (!offer.getProperty().getOwner().getId().equals(owner.getId())) {
             throw new OfferUnauthorizedException("Only the property owner can respond to this offer");
         }
 
-        // Can only respond to pending offers
         if (offer.getStatus() != OfferStatus.PENDING) {
             throw new InvalidOfferException("This offer has already been " + offer.getStatus().name().toLowerCase());
         }
 
-        // Decision must be ACCEPTED or DECLINED
         if (dto.getDecision() == OfferStatus.PENDING) {
             throw new InvalidOfferException("Decision must be ACCEPTED or DECLINED");
         }
@@ -96,7 +95,6 @@ public class OfferService {
         offer.setOwnerNote(dto.getOwnerNote());
         offer.setRespondedAt(LocalDateTime.now());
 
-        // When accepted → update property status and decline all other pending offers
         if (dto.getDecision() == OfferStatus.ACCEPTED) {
             Property property = offer.getProperty();
             property.setStatus(
@@ -104,7 +102,6 @@ public class OfferService {
             );
             propertyRepository.save(property);
 
-            // Auto-decline all other pending offers for this property
             List<Offer> otherPendingOffers = offerRepository
                     .findByPropertyIdAndStatus(property.getId(), OfferStatus.PENDING);
 
@@ -114,12 +111,19 @@ public class OfferService {
                         o.setStatus(OfferStatus.DECLINED);
                         o.setOwnerNote("Another offer was accepted for this property");
                         o.setRespondedAt(LocalDateTime.now());
+                        // ── Notify each auto-declined buyer ─────────────────
+                        notificationService.notifyBuyerOfOfferDecision(o);
                     });
 
             offerRepository.saveAll(otherPendingOffers);
         }
 
-        return mapToResponseDTO(offerRepository.save(offer));
+        Offer saved = offerRepository.save(offer);
+
+        // ── Notify the buyer of the explicit decision ────────────────────────
+        notificationService.notifyBuyerOfOfferDecision(saved);
+
+        return mapToResponseDTO(saved);
     }
 
     public void cancelOffer(Long offerId) {
