@@ -35,7 +35,7 @@ async function fetchSatisfaction(
   `.trim();
 
   try {
-    const res = await fetch('http://localhost:8084/soap/satisfaction', {
+    const res = await fetch('http://192.168.0.109:8084/soap/satisfaction', {
       method: 'POST',
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',

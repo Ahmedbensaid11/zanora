@@ -5,37 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="237e7a80-a9f8-4964-8645-34d094a0a7b8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../ML/PriceEstimation/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../ML/PriceEstimation/.dockerignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../ML/PriceEstimation/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../../ML/PriceEstimation/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/controller/GoogleAuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/controller/GoogleAuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/dto/CreatePropertyDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/dto/CreatePropertyDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/dto/PropertyResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/dto/PropertyResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/model/Offer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/model/Offer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/OfferService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/OfferService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/PropertyFilterService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/PropertyFilterService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/controller/PropertyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/controller/PropertyController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/PropertyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/PropertyService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/ReviewService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pi/zanoraback/service/ReviewService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/pi/zanoraback/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/pi/zanoraback/config/SecurityConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/pi/zanoraback/controller/GoogleAuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/pi/zanoraback/controller/GoogleAuthController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/Backoffice/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Backoffice/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/Backoffice/node_modules/.vite/deps/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Backoffice/node_modules/.vite/deps/_metadata.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/Backoffice/src/pages/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Backoffice/src/pages/Login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/app/(tabs)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/app/(tabs)/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/app/_layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/app/property/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/app/property/[id].tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/app/stores/propertyStore.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/components/PropertyCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/components/PropertyCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/components/Editpropertymodal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/components/Editpropertymodal.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/services/authService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/services/authService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/services/Notificationservice.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/services/Notificationservice.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,33 +46,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.ZanoraBackApplication.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;Spring Boot.ZanoraBackApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/Usersatistfaction&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.ZanoraBackApplication.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.ZanoraBackApplication.executor": "Run",
+    "git-widget-placeholder": "feature/notification",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="zanora-back" />
@@ -158,7 +135,7 @@
       <workItem from="1776184188240" duration="2533000" />
       <workItem from="1776441779087" duration="997000" />
       <workItem from="1776442785279" duration="6431000" />
-      <workItem from="1776519528534" duration="7812000" />
+      <workItem from="1776519528534" duration="14101000" />
     </task>
     <servers />
   </component>

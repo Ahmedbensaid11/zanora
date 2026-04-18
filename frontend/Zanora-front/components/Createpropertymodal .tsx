@@ -444,7 +444,7 @@ const CreatePropertyModal: React.FC<Props> = ({ visible, onClose, onCreated }) =
         sizeM2: area ? parseFloat(area) : 100.0,
       };
 
-      const response = await fetch('http://localhost:8083/api/predictions/predict', {
+      const response = await fetch('http://192.168.0.109:8083/api/predictions/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),

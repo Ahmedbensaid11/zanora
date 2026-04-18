@@ -74,7 +74,7 @@ async function updatePropertyAPI(
   formData.append('cityId', String(cityId));
   formData.append('primaryImageIndex', '0');
 
-  const res = await fetch(`http://localhost:8080/api/properties/${propertyId}`, {
+  const res = await fetch(`http://192.168.0.109:8080/api/properties/${propertyId}`, {
     method: 'PUT',
     headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
     body: formData,
@@ -88,7 +88,7 @@ async function updatePropertyAPI(
 async function deletePropertyAPI(propertyId: number): Promise<void> {
   console.log('deletePropertyAPI called with ID:', propertyId);
   const token = await AsyncStorage.getItem('token');
-  const res = await fetch(`http://localhost:8080/api/properties/${propertyId}`, {
+  const res = await fetch(`http://192.168.0.109:8080/api/properties/${propertyId}`, {
     method: 'DELETE',
     headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
   });
@@ -739,6 +739,7 @@ export default function PropertyDetailScreen() {
         onSubmit={handleEditSubmit}
         onDelete={handleDeleteProperty}
         initialData={buildEditInitialData()}
+        propertyId={localProperty.id}
         cityName={localProperty.cityName}
         submitting={editSubmitting}
       />

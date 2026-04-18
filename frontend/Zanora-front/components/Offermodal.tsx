@@ -218,7 +218,7 @@ const OfferModal = ({
       sizeM2: propertyMeta.sizeM2,
     };
 
-    fetch('http://localhost:8083/api/predictions/predict', {
+    fetch('http://192.168.0.109:8083/api/predictions/predict', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
