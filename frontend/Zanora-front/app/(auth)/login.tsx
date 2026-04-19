@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -12,27 +12,27 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import * as Google from 'expo-auth-session/providers/google';
-import * as WebBrowser from 'expo-web-browser';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnimatedCityscape from '../../components/AnimatedCityscape';
 import { Colors } from '../../constants/Colors';
 import { loginWithCredentials, loginWithGoogleUserInfo } from '../../services/authService';
-import { AuthSessionResult, TokenResponse, AuthError } from 'expo-auth-session';
 
-WebBrowser.maybeCompleteAuthSession();
+// ─── Google Sign-In config ────────────────────────────────────────────────────
+// Replace with your Web Client ID from Google Cloud Console
+const WEB_CLIENT_ID =
+  '838764370475-t15eeibsqd7acjqtr9kgaa815c833mg4.apps.googleusercontent.com';
 
-// 🔁 Paste your Web Client ID from Google Cloud Console here
-const WEB_CLIENT_ID = '838764370475-t15eeibsqd7acjqtr9kgaa815c833mg4.apps.googleusercontent.com';
-const ANDROID_CLIENT_ID = '838764370475-41gck64nnoc37amedlcao2kpcpqbd5ul.apps.googleusercontent.com';
-
-interface GoogleUserInfo {
-  id: string;
-  email: string;
-  name: string;
-  picture: string;
-  verified_email: boolean;
-}
+GoogleSignin.configure({
+  webClientId: WEB_CLIENT_ID,
+  offlineAccess: true,
+  scopes: ['profile', 'email'],
+});
+// ─────────────────────────────────────────────────────────────────────────────
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -47,59 +47,47 @@ export default function LoginScreen() {
   const isLargeScreen      = width >= 768;
   const isExtraLargeScreen = width >= 1024;
 
-
-
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: ANDROID_CLIENT_ID,
-    clientId: WEB_CLIENT_ID,
-    scopes: ['profile', 'email'],
-  });
-
-
-
-  useEffect(() => {
-    if (response?.type === 'success') {
-      handleGoogleResponse(response);
-    } else if (response?.type === 'error') {
-      setError('Google sign-in was cancelled or failed.');
-    }
-  }, [response]);
-
-
-  const handleGoogleResponse = async (
-    authResponse: Extract<typeof response, { type: 'success' }>
-  ) => {
+  // ── Native Google Sign-In ────────────────────────────────────────────────
+  const handleGoogleSignIn = async () => {
     try {
       setGoogleLoading(true);
       setError('');
 
-      const accessToken = authResponse.authentication?.accessToken
-        ?? authResponse.params?.access_token;
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
 
-      if (!accessToken) throw new Error('No access token received from Google');
+      const signInResult = await GoogleSignin.signIn();
 
-      const userInfoRes = await fetch('https://www.googleapis.com/userinfo/v2/me', {
-        headers: { Authorization: `Bearer ${accessToken}` },
+      // v13+ stores user info under .data; older versions put it at root
+      const user = signInResult.data?.user ?? (signInResult as any).user;
+
+      if (!user?.email) throw new Error('No email returned from Google');
+
+      const data = await loginWithGoogleUserInfo({
+        id: user.id,
+        email: user.email,
+        name: user.name ?? '',
+        picture: user.photo ?? '',
+        verified_email: true,
       });
 
-      if (!userInfoRes.ok) throw new Error('Failed to fetch Google user info');
-
-      const userInfo: GoogleUserInfo = await userInfoRes.json();
-
-      if (!userInfo.email) throw new Error('No email returned from Google');
-
-      const data = await loginWithGoogleUserInfo(userInfo);
       await AsyncStorage.setItem('token', data.token);
       router.replace('/(tabs)');
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Google sign-in failed. Please try again.';
-      setError(message);
+    } catch (err: any) {
+      if (err?.code === statusCodes.SIGN_IN_CANCELLED) {
+        // User dismissed – no error banner needed
+      } else if (err?.code === statusCodes.IN_PROGRESS) {
+        setError('Sign-in already in progress.');
+      } else if (err?.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        setError('Google Play Services are not available on this device.');
+      } else {
+        setError(err instanceof Error ? err.message : 'Google sign-in failed. Please try again.');
+      }
     } finally {
       setGoogleLoading(false);
     }
   };
 
-  // --- Email/Password Login ---
+  // ── Email / Password Login ───────────────────────────────────────────────
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
       setError('Please enter your email and password.');
@@ -114,7 +102,8 @@ export default function LoginScreen() {
       await AsyncStorage.setItem('token', data.token);
       router.replace('/(tabs)');
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Login failed. Please check your credentials.';
+      const message =
+        err instanceof Error ? err.message : 'Login failed. Please check your credentials.';
       setError(message);
     } finally {
       setLoading(false);
@@ -137,11 +126,13 @@ export default function LoginScreen() {
             <AnimatedCityscape />
           </View>
 
-          <View style={[
-            styles.loginContainer,
-            isLargeScreen && styles.loginContainerLarge,
-            isExtraLargeScreen && styles.loginContainerXLarge,
-          ]}>
+          <View
+            style={[
+              styles.loginContainer,
+              isLargeScreen && styles.loginContainerLarge,
+              isExtraLargeScreen && styles.loginContainerXLarge,
+            ]}
+          >
             <Text style={[styles.title, isLargeScreen && styles.titleLarge]}>
               Welcome Back
             </Text>
@@ -149,7 +140,6 @@ export default function LoginScreen() {
               Sign in to continue
             </Text>
 
-            {/* Error message */}
             {!!error && (
               <View style={styles.errorBox}>
                 <Text style={styles.errorText}>{error}</Text>
@@ -212,27 +202,24 @@ export default function LoginScreen() {
                 <View style={styles.dividerLine} />
               </View>
 
-              {/* Google Sign-In Button */}
-              <TouchableOpacity
-                style={[
-                  styles.googleButton,
-                  isLargeScreen && styles.buttonLarge,
-                  (!request || googleLoading || loading) && styles.buttonDisabled,
-                ]}
-                onPress={() => promptAsync()}
-                disabled={!request || googleLoading || loading}
-              >
-                {googleLoading ? (
-                  <ActivityIndicator color={Colors.primary} />
-                ) : (
-                  <View style={styles.googleButtonInner}>
-                    <Text style={styles.googleIcon}>G</Text>
-                    <Text style={[styles.googleButtonText, isLargeScreen && styles.buttonTextLarge]}>
-                      Continue with Google
-                    </Text>
-                  </View>
-                )}
-              </TouchableOpacity>
+              {/* ── Native Google Sign-In Button ── */}
+              {googleLoading ? (
+                <ActivityIndicator
+                  color={Colors.primary}
+                  style={styles.googleLoadingIndicator}
+                />
+              ) : (
+                <GoogleSigninButton
+                  style={[
+                    styles.googleNativeButton,
+                    isLargeScreen && styles.googleNativeButtonLarge,
+                  ]}
+                  size={GoogleSigninButton.Size.Wide}
+                  color={GoogleSigninButton.Color.Light}
+                  onPress={handleGoogleSignIn}
+                  disabled={googleLoading || loading}
+                />
+              )}
 
               <View style={styles.registerContainer}>
                 <Text style={[styles.registerText, isLargeScreen && styles.textLarge]}>
@@ -267,7 +254,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cityscapeContainer: { width: '100%' },
-  cityscapeLarge: { maxHeight: 300 },
+  cityscapeLarge:     { maxHeight: 300 },
   loginContainer: {
     width: '100%',
     paddingHorizontal: 30,
@@ -290,7 +277,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     textAlign: 'center',
   },
-  titleLarge: { fontSize: 40, marginBottom: 12 },
+  titleLarge:   { fontSize: 40, marginBottom: 12 },
   subtitle: {
     fontSize: 16,
     color: Colors.textSecondary,
@@ -353,7 +340,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     marginTop: 15,
   },
-  buttonDisabled: { opacity: 0.6 },
+  buttonDisabled:  { opacity: 0.6 },
   buttonText: {
     color: '#FFFFFF',
     fontSize: 16,
@@ -375,33 +362,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     fontSize: 14,
   },
-  googleButton: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 14,
-    alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
+  googleNativeButton: {
+    width: '100%',
+    height: 48,
+    alignSelf: 'center',
   },
-  googleButtonInner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  googleIcon: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#4285F4',
-  },
-  googleButtonText: {
-    color: '#3C3C3C',
-    fontSize: 15,
-    fontWeight: '600',
+  googleNativeButtonLarge: { height: 56 },
+  googleLoadingIndicator: {
+    height: 48,
+    alignSelf: 'center',
   },
   registerContainer: {
     flexDirection: 'row',

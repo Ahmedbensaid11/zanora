@@ -32,7 +32,7 @@ import {
 } from '../services/Propertyservice';
 
 const { height, width } = Dimensions.get('window');
-const MODAL_HEIGHT = height * 0.92;
+const MODAL_HEIGHT = height * 0.88; // ← slightly reduced to avoid keyboard overlap
 
 // ─── Step indicator ────────────────────────────────────────────────────────────
 const STEPS = ['Details', 'Location', 'Photos'];
@@ -372,6 +372,9 @@ const CreatePropertyModal: React.FC<Props> = ({ visible, onClose, onCreated }) =
   const backdropAnim = useRef(new Animated.Value(0)).current;
   const stepSlideAnim = useRef(new Animated.Value(0)).current;
 
+  // ← ScrollView ref so we can scroll to focused inputs
+  const scrollRef = useRef<ScrollView>(null);
+
   const [step, setStep] = useState(0);
 
   // form
@@ -419,6 +422,9 @@ const CreatePropertyModal: React.FC<Props> = ({ visible, onClose, onCreated }) =
       Animated.spring(stepSlideAnim, { toValue: 0, tension: 100, friction: 12, useNativeDriver: true }),
     ]).start();
     setStep(next);
+
+    // scroll back to top on step change
+    scrollRef.current?.scrollTo({ y: 0, animated: false });
 
     // Trigger prediction when entering step 2
     if (next === 2 && selectedCity) {
@@ -594,10 +600,11 @@ const CreatePropertyModal: React.FC<Props> = ({ visible, onClose, onCreated }) =
           ))}
         </View>
 
+        {/* ── FIXED: behavior="height" on Android, correct offset ── */}
         <KeyboardAvoidingView
           style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 20 : 0}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 90}
         >
           <Animated.View
             style={[
@@ -609,9 +616,11 @@ const CreatePropertyModal: React.FC<Props> = ({ visible, onClose, onCreated }) =
             ]}
           >
             <ScrollView
+              ref={scrollRef}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={styles.scrollBody}
               keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="interactive"
             >
               {/* ── Step 0: Details ── */}
               {step === 0 && (
@@ -911,7 +920,7 @@ const styles = StyleSheet.create({
   stepLine: { flex: 1, height: 2, backgroundColor: Colors.border, marginHorizontal: 8, marginBottom: 14, borderRadius: 1 },
   stepLineDone: { backgroundColor: Colors.primary },
   stepContent: { flex: 1 },
-  scrollBody: { padding: 22, paddingBottom: 20 },
+  scrollBody: { padding: 22, paddingBottom: 40 },
   rowFields: { flexDirection: 'row', gap: 14 },
   typeChip: { paddingHorizontal: 14, paddingVertical: 10, borderRadius: 20, borderWidth: 1.5, borderColor: Colors.border, backgroundColor: Colors.white },
   typeChipActive: { borderColor: Colors.primary, backgroundColor: Colors.primary },
@@ -951,7 +960,7 @@ const styles = StyleSheet.create({
   noImagesIcon: { fontSize: 48 },
   noImagesText: { fontSize: 17, fontWeight: '700', color: Colors.text },
   noImagesSub: { fontSize: 13, color: Colors.textSecondary },
-  footer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 14, borderTopWidth: 1, borderTopColor: Colors.border, gap: 12 },
+  footer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 14, paddingBottom: 38, borderTopWidth: 1, borderTopColor: Colors.border, gap: 12 },
   backBtn: { flex: 1, height: 50, borderRadius: 14, borderWidth: 1.5, borderColor: Colors.border, alignItems: 'center', justifyContent: 'center' },
   backBtnText: { fontSize: 15, fontWeight: '600', color: Colors.textSecondary },
   nextBtn: { flex: 2, height: 50, borderRadius: 14, backgroundColor: Colors.primary, alignItems: 'center', justifyContent: 'center', shadowColor: Colors.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 4 },

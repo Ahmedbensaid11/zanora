@@ -116,7 +116,6 @@ export default function PropertyDetailScreen() {
   const [userHasReviewed, setUserHasReviewed] = useState(false);
   const [permissionsLoading, setPermissionsLoading] = useState(true);
 
-  // Local copy so we can reflect edits without a full reload
   const [localProperty, setLocalProperty] = useState<PropertyResponseDTO | null>(property);
 
   const [ownReviews, setOwnReviews] = useState<Set<string>>(new Set());
@@ -150,6 +149,12 @@ export default function PropertyDetailScreen() {
 
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editSubmitting, setEditSubmitting] = useState(false);
+
+  // ── Tracks current gallery images as URLs so the gallery re-renders
+  //    whenever an image is added or deleted inside the modal ─────────────────
+  const [galleryImageUrls, setGalleryImageUrls] = useState<string[]>(
+    localProperty?.imageUrls ?? []
+  );
 
   const contentAnim = useRef(new Animated.Value(0)).current;
 
@@ -205,6 +210,15 @@ export default function PropertyDetailScreen() {
       setReviewsLoading(false);
     }
   }, [property?.id, reviewSort]);
+
+  // ── Called by EditPropertyModal whenever images change ─────────────────────
+  const handleImagesChanged = useCallback((newUrls: string[]) => {
+    setGalleryImageUrls(newUrls);
+    // Also keep localProperty in sync so a re-open of the modal starts fresh
+    setLocalProperty((prev) =>
+      prev ? { ...prev, imageUrls: newUrls } : prev
+    );
+  }, []);
 
   // ── Review handlers ────────────────────────────────────────────────────────
   const openCreateReview = () => {
@@ -322,9 +336,7 @@ export default function PropertyDetailScreen() {
   const handleEditSubmit = async (data: EditPropertyFormData) => {
     if (!localProperty?.id) return;
 
-    // cityId is now a direct field on PropertyResponseDTO
     const cityId = localProperty.cityId;
-
     if (!cityId) {
       Alert.alert('Error', 'City information is missing. Cannot update property.');
       return;
@@ -333,7 +345,6 @@ export default function PropertyDetailScreen() {
     setEditSubmitting(true);
     try {
       await updatePropertyAPI(localProperty.id, data, cityId);
-      // Optimistically update the local view
       setLocalProperty((prev) =>
         prev
           ? {
@@ -396,25 +407,16 @@ export default function PropertyDetailScreen() {
     );
   }
 
-  const galleryImages: GalleryImage[] = (() => {
-    // PropertyResponseDTO uses imageUrls (list of URL strings)
-    if (
-      localProperty.imageUrls &&
-      Array.isArray(localProperty.imageUrls) &&
-      localProperty.imageUrls.length > 0
-    ) {
-      return localProperty.imageUrls.map((url: string) => ({ uri: url }));
-    }
-    return [];
-  })();
+  // Use galleryImageUrls state (updated live by modal) instead of localProperty.imageUrls
+  const galleryImages: GalleryImage[] = galleryImageUrls.length > 0
+    ? galleryImageUrls.map((url) => ({ uri: url }))
+    : [];
 
   const statusColor = STATUS_COLORS[localProperty.status] ?? '#95A5A6';
   const canReview =
     !isOwner && !userHasReviewed && localProperty.status === 'AVAILABLE';
   const canOffer = !isOwner && localProperty.status === 'AVAILABLE';
 
-  // Build propertyMeta for OfferModal price prediction
-  // status maps to French strings the prediction API expects
   const offerStatusLabel =
     localProperty.status === 'AVAILABLE' || localProperty.status === 'PENDING'
       ? offerType === OfferType.RENT
@@ -438,7 +440,7 @@ export default function PropertyDetailScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 120 }}
       >
-        {/* Gallery */}
+        {/* Gallery — re-renders automatically when galleryImageUrls changes */}
         <View style={{ position: 'relative' }}>
           <ImageGallery images={galleryImages} />
 
@@ -487,7 +489,7 @@ export default function PropertyDetailScreen() {
                 <Text style={s.typeText}>{localProperty.type}</Text>
               </View>
               {!permissionsLoading && isOwner && (
-  <>
+                <>
                   <TouchableOpacity
                     style={s.editIconBtn}
                     onPress={() => setEditModalVisible(true)}
@@ -742,6 +744,7 @@ export default function PropertyDetailScreen() {
         propertyId={localProperty.id}
         cityName={localProperty.cityName}
         submitting={editSubmitting}
+        onImagesChanged={handleImagesChanged}
       />
     </View>
   );
