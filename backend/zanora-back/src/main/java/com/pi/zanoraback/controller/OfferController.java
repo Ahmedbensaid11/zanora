@@ -6,6 +6,10 @@ import com.pi.zanoraback.dto.OfferResponseDTO;
 import com.pi.zanoraback.service.OfferService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +17,9 @@ import java.util.List;
 
 @CrossOrigin(
         origins = {"http://localhost:5173", "http://localhost:8081"},
+        allowedHeaders = "*",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PATCH,
+                RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS},
         allowCredentials = "true"
 )
 @RestController
@@ -50,9 +57,13 @@ public class OfferController {
     }
 
     // Buyer: view all my submitted offers
-    @GetMapping("/my-offers")
-    public ResponseEntity<List<OfferResponseDTO>> getMyOffers() {
-        return ResponseEntity.ok(offerService.getMyOffers());
+    @GetMapping("/my")
+    public ResponseEntity<Page<OfferResponseDTO>> getMyOffers(
+            @RequestParam(defaultValue = "0")  int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return ResponseEntity.ok(offerService.getMyOffers(pageable));
     }
 
     // Owner: view all incoming offers across all my properties

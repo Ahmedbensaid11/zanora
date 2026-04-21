@@ -8,6 +8,8 @@ import com.pi.zanoraback.model.*;
 import com.pi.zanoraback.repository.jpa.OfferRepository;
 import com.pi.zanoraback.repository.jpa.PropertyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -157,12 +159,10 @@ public class OfferService {
     }
 
     @Transactional(readOnly = true)
-    public List<OfferResponseDTO> getMyOffers() {
+    public Page<OfferResponseDTO> getMyOffers(Pageable pageable) {
         User buyer = userService.getCurrentlyAuthenticatedUser();
-        return offerRepository.findByBuyerId(buyer.getId())
-                .stream()
-                .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+        return offerRepository.findByBuyerId(buyer.getId(), pageable)
+                .map(this::mapToResponseDTO);
     }
 
     @Transactional(readOnly = true)
@@ -175,10 +175,25 @@ public class OfferService {
     }
 
     private OfferResponseDTO mapToResponseDTO(Offer offer) {
+        String imageBase64 = null;
+
+        List<PropertyImage> images = offer.getProperty().getImages();
+        if (images != null && !images.isEmpty()) {
+            // Prefer the primary image, fallback to first
+            PropertyImage img = images.stream()
+                    .filter(PropertyImage::isPrimary)
+                    .findFirst()
+                    .orElse(images.get(0));
+
+            imageBase64 = "data:" + img.getContentType() + ";base64,"
+                    + java.util.Base64.getEncoder().encodeToString(img.getData());
+        }
+
         return OfferResponseDTO.builder()
                 .id(offer.getId())
                 .propertyId(offer.getProperty().getId())
                 .propertyTitle(offer.getProperty().getTitle())
+                .propertyImageBase64(imageBase64) // ← ADD THIS
                 .buyerId(offer.getBuyer().getId())
                 .buyerUsername(offer.getBuyer().getUsername())
                 .type(offer.getType())
