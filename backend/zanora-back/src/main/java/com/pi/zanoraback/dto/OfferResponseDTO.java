@@ -23,4 +23,5 @@ public class OfferResponseDTO {
     private String ownerNote;
     private LocalDateTime createdAt;
     private LocalDateTime respondedAt;
+    private String propertyImageBase64;
 }

@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
+import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 import Svg, {
-  Path,
-  Rect,
   Circle,
-  Line,
-  Polygon,
-  G,
   Defs,
+  G,
+  Line,
   LinearGradient,
+  Path,
+  Polygon,
+  Rect,
   Stop,
 } from 'react-native-svg';
 import { Colors } from '../constants/Colors';
@@ -26,10 +26,8 @@ const EmptyHouseAnimation: React.FC<Props> = ({
   title = 'No properties found',
   subtitle = 'Try adjusting your filters',
 }) => {
-  // ── mounted guard — stops animations trying to update unmounted nodes ──────
   const isMounted = useRef(true);
 
-  // ── animation values ───────────────────────────────────────────────────────
   const fadeIn = useRef(new Animated.Value(0)).current;
   const houseSlide = useRef(new Animated.Value(30)).current;
   const roofScale = useRef(new Animated.Value(0)).current;
@@ -43,13 +41,11 @@ const EmptyHouseAnimation: React.FC<Props> = ({
   const starOpacity3 = useRef(new Animated.Value(0)).current;
   const groundOpacity = useRef(new Animated.Value(0)).current;
 
-  // refs to hold loop animation references so we can stop them on unmount
   const loopAnims = useRef<Animated.CompositeAnimation[]>([]);
 
   useEffect(() => {
     isMounted.current = true;
 
-    // ── Entry sequence ────────────────────────────────────────────────────────
     const entryAnim = Animated.sequence([
       Animated.parallel([
         Animated.timing(fadeIn, {
@@ -63,7 +59,7 @@ const EmptyHouseAnimation: React.FC<Props> = ({
         }),
       ]),
       Animated.spring(roofScale, {
-        toValue: 1, tension: 100, friction: 7, useNativeDriver: true,
+        toValue: 1, tension: 100, friction: 7, useNativeDriver: false, // false because used in SVG interpolation
       }),
       Animated.timing(doorOpen, {
         toValue: 1, duration: 500,
@@ -73,10 +69,8 @@ const EmptyHouseAnimation: React.FC<Props> = ({
     ]);
 
     entryAnim.start(({ finished }) => {
-      // Don't start loops if component already unmounted or entry was interrupted
       if (!finished || !isMounted.current) return;
 
-      // ── Loop animations ────────────────────────────────────────────────────
       const floatLoop = Animated.loop(
         Animated.sequence([
           Animated.timing(floatY, {
@@ -136,22 +130,30 @@ const EmptyHouseAnimation: React.FC<Props> = ({
       const star2Loop = makeTwinkle(starOpacity2, 500);
       const star3Loop = makeTwinkle(starOpacity3, 900);
 
-      // Store all loops so we can stop them on unmount
       loopAnims.current = [
         floatLoop, smokeYLoop, smokeOpacityLoop,
         windowLoop, star1Loop, star2Loop, star3Loop,
       ];
-
       loopAnims.current.forEach((a) => a.start());
     });
 
-    // ── Cleanup: stop all animations when component unmounts ─────────────────
     return () => {
       isMounted.current = false;
       entryAnim.stop();
       loopAnims.current.forEach((a) => a.stop());
     };
   }, []);
+
+  // ── Interpolated values ────────────────────────────────────────────────────
+
+  // ✅ SVG transform must be a plain string — interpolate from Animated.Value
+  const roofTransform = roofScale.interpolate({
+    inputRange: [0, 1],
+    outputRange: [
+      'translate(90, 80) scale(0) translate(-90, -80)',
+      'translate(90, 80) scale(1) translate(-90, -80)',
+    ],
+  });
 
   const doorWidth = doorOpen.interpolate({
     inputRange: [0, 1],
@@ -172,7 +174,7 @@ const EmptyHouseAnimation: React.FC<Props> = ({
         <Animated.Text style={[styles.star, { opacity: starOpacity3 }]}>✦</Animated.Text>
       </View>
 
-      {/* House */}
+      {/* House — houseSlide uses useNativeDriver:true, floatY too, so combine in Animated.View */}
       <Animated.View style={{ transform: [{ translateY: Animated.add(houseSlide, floatY) }] }}>
         <Svg width={180} height={160} viewBox="0 0 180 160">
           <Defs>
@@ -192,14 +194,8 @@ const EmptyHouseAnimation: React.FC<Props> = ({
           {/* Walls */}
           <Rect x="35" y="80" width="110" height="70" fill="url(#wall)" rx="2" />
 
-          {/* Roof */}
-          <AnimatedG
-            transform={[
-              { translateX: 90 }, { translateY: 80 },
-              { scale: roofScale },
-              { translateX: -90 }, { translateY: -80 },
-            ]}
-          >
+          {/* Roof — ✅ transform is now a plain interpolated string */}
+          <AnimatedG transform={roofTransform}>
             <Polygon points="25,82 90,28 155,82" fill="url(#roof)" />
             <Polygon points="22,84 90,28 158,84 155,84 90,32 25,84" fill="#1A2A55" opacity="0.4" />
           </AnimatedG>

@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="237e7a80-a9f8-4964-8645-34d094a0a7b8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/app/(auth)/login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/app/(auth)/login.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/app/property/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/app/property/[id].tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/app/(tabs)/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/components/Emptyhouseanimation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/components/Emptyhouseanimation.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/Zanora-front/services/Propertyservice.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/Zanora-front/services/Propertyservice.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +53,7 @@
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;Spring Boot.ZanoraBackApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/notification&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/Usersatistfaction&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -68,7 +64,6 @@
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>

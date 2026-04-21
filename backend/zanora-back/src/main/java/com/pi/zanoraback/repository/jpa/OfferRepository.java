@@ -2,6 +2,8 @@ package com.pi.zanoraback.repository.jpa;
 
 import com.pi.zanoraback.model.Offer;
 import com.pi.zanoraback.model.OfferStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -18,4 +20,6 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
     Optional<Offer> findByPropertyIdAndBuyerIdAndStatus(Long propertyId, Long buyerId, OfferStatus status);
 
     List<Offer> findByPropertyOwnerId(Long ownerId);
+    Page<Offer> findByBuyerId(Long buyerId, Pageable pageable);
+
 }
