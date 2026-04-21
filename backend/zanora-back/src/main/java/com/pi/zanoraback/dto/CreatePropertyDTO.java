@@ -38,6 +38,8 @@ public class CreatePropertyDTO {
     private Float pricePerMonth;
 
     private List<MultipartFile> images;
+    private String status;
+
 
     @NotNull
     private Integer primaryImageIndex; // index of the primary image in the list

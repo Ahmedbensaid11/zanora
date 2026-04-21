@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.pi</groupId>
-    <artifactId>smartwater-back</artifactId>
+    <artifactId>zanora-back</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>smartwater-back</name>
-    <description>smartwater-back</description>
+    <name>zanora-back</name>
+    <description>zanora-back</description>
     <url/>
     <licenses>
         <license/>
@@ -37,6 +37,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
         <dependency>

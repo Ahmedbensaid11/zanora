@@ -3,10 +3,7 @@ package com.pi.zanoraback.service;
 import com.pi.zanoraback.dto.CreatePropertyDTO;
 import com.pi.zanoraback.dto.PropertyResponseDTO;
 import com.pi.zanoraback.model.*;
-import com.pi.zanoraback.repository.jpa.CityRepository;
-import com.pi.zanoraback.repository.jpa.PropertyRepository;
-import com.pi.zanoraback.repository.jpa.RoleRepository;
-import com.pi.zanoraback.repository.jpa.UserRepository;
+import com.pi.zanoraback.repository.jpa.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,14 +15,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class PropertyService {
 
     private final PropertyRepository propertyRepository;
+    private final OfferRepository offerRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PropertyImageRepository propertyImageRepository;
+
     private final CityRepository cityRepository;
 
     @Transactional
@@ -93,6 +94,13 @@ public class PropertyService {
             throw new RuntimeException("Unauthorized: You do not own this property");
         }
 
+        // Clear child collections before deleting
+        property.getImages().clear();
+        List<Offer> offers = offerRepository.findByPropertyId(propertyId);
+        offerRepository.deleteAll(offers);
+        propertyRepository.save(property); // flush the orphan removal
+
+
         propertyRepository.delete(property);
     }
 
@@ -145,6 +153,55 @@ public class PropertyService {
         Property property = propertyRepository.findById(propertyId)
                 .orElseThrow(() -> new RuntimeException("Property not found"));
         return property.getOwner().getId().equals(userId);
+    }
+    // In PropertyService
+
+
+    public List<Map<String, Object>> getPropertyImagesMeta(Long propertyId) {
+        Property property = propertyRepository.findById(propertyId)
+                .orElseThrow(() -> new RuntimeException("Property not found"));
+        return property.getImages().stream().map(img -> {
+            Map<String, Object> m = new java.util.LinkedHashMap<>();
+            m.put("id", img.getId());
+            m.put("isPrimary", img.isPrimary());
+            m.put("contentType", img.getContentType());
+            return m;
+        }).toList();
+    }
+
+    @Transactional
+    public void deletePropertyImage(Long propertyId, Long imageId, Long ownerId) {
+        Property property = propertyRepository.findById(propertyId)
+                .orElseThrow(() -> new RuntimeException("Property not found"));
+        if (!property.getOwner().getId().equals(ownerId))
+            throw new RuntimeException("Unauthorized");
+        PropertyImage image = property.getImages().stream()
+                .filter(i -> i.getId().equals(imageId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Image not found"));
+        property.getImages().remove(image);
+        propertyRepository.save(property);
+    }
+
+    @Transactional
+    public List<Map<String, Object>> uploadPropertyImages(Long propertyId, Long ownerId,
+                                                          List<MultipartFile> files, Integer primaryIndex) throws IOException {
+        Property property = propertyRepository.findById(propertyId)
+                .orElseThrow(() -> new RuntimeException("Property not found"));
+        if (!property.getOwner().getId().equals(ownerId))
+            throw new RuntimeException("Unauthorized");
+        for (int i = 0; i < files.size(); i++) {
+            MultipartFile file = files.get(i);
+            PropertyImage image = PropertyImage.builder()
+                    .property(property)
+                    .data(file.getBytes())
+                    .contentType(file.getContentType())
+                    .isPrimary(primaryIndex != null && i == primaryIndex)
+                    .build();
+            property.getImages().add(image);
+        }
+        propertyRepository.save(property);
+        return getPropertyImagesMeta(propertyId);
     }
 
     // ─── NEW ──────────────────────────────────────────────────────────────────

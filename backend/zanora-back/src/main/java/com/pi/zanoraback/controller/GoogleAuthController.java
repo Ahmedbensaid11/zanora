@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @CrossOrigin(
-        origins = {"http://localhost:5173", "http://localhost:8081"},
+        origins = {"http://localhost:5173", "http://localhost:8081", "http://192.168.0.109:8081"},
         allowCredentials = "true"
 )
 @RestController

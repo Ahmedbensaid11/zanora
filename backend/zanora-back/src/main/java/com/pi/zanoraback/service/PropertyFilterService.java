@@ -123,6 +123,7 @@ public class PropertyFilterService {
                 .bathrooms(p.getBathrooms())
                 .type(p.getType())
                 .address(p.getAddress())
+                .cityId(p.getCity().getId())
                 .cityName(p.getCity() != null ? p.getCity().getName() : null)
                 .stateName(p.getCity() != null && p.getCity().getState() != null
                         ? p.getCity().getState().getName() : null)

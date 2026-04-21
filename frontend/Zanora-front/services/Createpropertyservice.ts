@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 import { PropertyType } from '../constants/Propertyenums ';
 
-const BASE_URL = 'http://localhost:8080/api';
+const BASE_URL = 'http://192.168.0.109:8080/api';
 
 const authHeaders = async (): Promise<Record<string, string>> => {
   const token = await AsyncStorage.getItem('token');

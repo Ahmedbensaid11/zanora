@@ -1,0 +1,1 @@
+CREATE DATABASE immobilier_db;

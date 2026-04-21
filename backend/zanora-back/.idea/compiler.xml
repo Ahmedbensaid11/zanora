@@ -7,11 +7,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="smartwater-back" />
+        <module name="zanora-back" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="zanora-back" target="17" />
+      <module name="smartwater-back" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

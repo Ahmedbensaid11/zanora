@@ -63,9 +63,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/properties/**").permitAll()
                         .requestMatchers("/api/offers/**").permitAll()
                         .requestMatchers("/api/reviews/**").permitAll()
-                        .requestMatchers("/api/subcategories/**").permitAll()
+                        .requestMatchers("/api/notifications/**").permitAll()
                         .requestMatchers("/api/subscriptions/**").permitAll()
                         .requestMatchers("/api/monthly-usage/**").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex

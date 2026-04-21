@@ -21,6 +21,7 @@ public class PropertyResponseDTO {
     private Integer bathrooms;
     private PropertyType type;
     private String address;
+    private Long cityId;
     private String cityName;
     private String stateName;
     private Double rating;

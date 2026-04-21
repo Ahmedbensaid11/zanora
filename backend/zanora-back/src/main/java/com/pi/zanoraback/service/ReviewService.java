@@ -4,6 +4,7 @@ import com.pi.zanoraback.dto.ReviewDTO;
 import com.pi.zanoraback.exception.DuplicateReviewException;
 import com.pi.zanoraback.exception.ReviewNotFoundException;
 import com.pi.zanoraback.exception.ReviewUnauthorizedException;
+import com.pi.zanoraback.model.Property;
 import com.pi.zanoraback.model.Review;
 import com.pi.zanoraback.model.User;
 import com.pi.zanoraback.repository.jpa.PropertyRepository;
@@ -22,14 +23,15 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final PropertyRepository propertyRepository;
-    private final UserRepository userRepository;   // ← needed for enrichment only
+    private final UserRepository userRepository;
     private final UserService userService;
+    private final NotificationService notificationService; // ← NEW
 
     public Review createReview(ReviewDTO dto) {
         User currentUser = userService.getCurrentlyAuthenticatedUser();
         Long userId = currentUser.getId();
 
-        propertyRepository.findById(dto.getPropertyId())
+        Property property = propertyRepository.findById(dto.getPropertyId())
                 .orElseThrow(() -> new RuntimeException(
                         "Property not found with id: " + dto.getPropertyId()));
 
@@ -47,7 +49,18 @@ public class ReviewService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return enrich(reviewRepository.save(review));
+        Review saved = enrich(reviewRepository.save(review));
+
+        // ── Notify the property owner ────────────────────────────────────────
+        notificationService.notifyOwnerOfNewReview(
+                currentUser.getUsername(),
+                property.getOwner(),
+                property.getId(),
+                property.getTitle(),
+                saved.getId()          // MongoDB ObjectId string
+        );
+
+        return saved;
     }
 
     public Review updateReview(String reviewId, Long userId, ReviewDTO dto) {
@@ -101,7 +114,6 @@ public class ReviewService {
         return reviewRepository.averageRatingByPropertyId(propertyId);
     }
 
-    // ── Enrich a review with username + profileImg from PostgreSQL ────────────
     private Review enrich(Review review) {
         userRepository.findById(review.getUserId()).ifPresent(user -> {
             review.setUsername(user.getUsername());
@@ -109,10 +121,12 @@ public class ReviewService {
         });
         return review;
     }
+
     public boolean hasReviewed(Long propertyId) {
         Long userId = userService.getCurrentlyAuthenticatedUser().getId();
         return reviewRepository.findByPropertyIdAndUserId(propertyId, userId).isPresent();
     }
+
     public boolean isReviewAuthor(String reviewId) {
         Long userId = userService.getCurrentlyAuthenticatedUser().getId();
         return reviewRepository.findById(reviewId)

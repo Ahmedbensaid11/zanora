@@ -17,6 +17,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Dockerfile" />
         <option value="Class" />
       </list>
     </option>
@@ -67,12 +68,6 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="zanora-back" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="zanora-back" />
       <option name="ENV_FILES" value="" />
@@ -96,7 +91,7 @@
       <method v="2" />
     </configuration>
     <configuration name="ZanoraBackApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="smartwater-back" />
+      <module name="zanora-back" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.pi.zanoraback.ZanoraBackApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -106,7 +101,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26199.169" />
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
       </set>
     </attachedChunks>
   </component>
@@ -129,10 +125,23 @@
       <workItem from="1774979540622" duration="3633000" />
       <workItem from="1775382672814" duration="17821000" />
       <workItem from="1775574043584" duration="2648000" />
+      <workItem from="1776174866315" duration="4080000" />
+      <workItem from="1776184188240" duration="2533000" />
+      <workItem from="1776441779087" duration="997000" />
+      <workItem from="1776442785279" duration="6431000" />
+      <workItem from="1776519528534" duration="14101000" />
+      <workItem from="1776556756957" duration="2129000" />
+      <workItem from="1776559093113" duration="2499000" />
+      <workItem from="1776585290260" duration="1072000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/.." />
+    </ignored-roots>
   </component>
 </project>
